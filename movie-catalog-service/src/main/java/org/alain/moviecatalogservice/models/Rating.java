@@ -1,4 +1,4 @@
-package org.alain.ratingsdataservice.model;
+package org.alain.moviecatalogservice.models;
 
 public class Rating {
 
