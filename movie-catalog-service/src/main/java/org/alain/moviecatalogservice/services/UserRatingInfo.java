@@ -1,6 +1,7 @@
 package org.alain.moviecatalogservice.services;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.alain.moviecatalogservice.models.Rating;
 import org.alain.moviecatalogservice.models.UserRatings;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,13 @@ public class UserRatingInfo {
         this.restTemplate = restTemplate;
     }
 
-    @HystrixCommand(fallbackMethod = "getFallbackUserRating")
+    @HystrixCommand(fallbackMethod = "getFallbackUserRating",
+        commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+        })
     public UserRatings getUserRating(@PathVariable("userId") String userId) {
         return restTemplate.getForObject(
                 "http://ratings-data-service/ratingsdata/users/" + userId,
