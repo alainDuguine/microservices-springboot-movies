@@ -18,12 +18,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/catalog")
 public class MovieCatalogResource {
 
-    RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public MovieCatalogResource(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @GetMapping("/{userId}")
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId){
 
-        // Hardcoding the resonse
+        // Hardcoding the response
         List<Rating> ratings = Arrays.asList(
                 new Rating("1234", 4),
                 new Rating("5678", 3)
